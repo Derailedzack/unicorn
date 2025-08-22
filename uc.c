@@ -306,6 +306,7 @@ static uc_err uc_init_engine(uc_engine *uc)
     return UC_ERR_OK;
 }
 
+
 UNICORN_EXPORT
 uc_err uc_open(uc_arch arch, uc_mode mode, uc_engine **result)
 {
@@ -325,7 +326,7 @@ uc_err uc_open(uc_arch arch, uc_mode mode, uc_engine **result)
         uc->mode = mode;
         uc->reg_read = default_reg_read;
         uc->reg_write = default_reg_write;
-
+        uc->mainloop_callback = NULL;
         // uc->ram_list = { .blocks = QLIST_HEAD_INITIALIZER(ram_list.blocks) };
         QLIST_INIT(&uc->ram_list.blocks);
 
@@ -492,6 +493,7 @@ uc_err uc_open(uc_arch arch, uc_mode mode, uc_engine **result)
         return UC_ERR_ARCH;
     }
 }
+
 
 UNICORN_EXPORT
 uc_err uc_close(uc_engine *uc)
@@ -1934,7 +1936,10 @@ uc_err uc_hook_del(uc_engine *uc, uc_hook hh)
     restore_jit_state(uc);
     return UC_ERR_OK;
 }
-
+UNICORN_EXPORT
+void uc_set_mainloop_callback(uc_engine* uc, uc_args_uc_t new_mainloop_cb) {
+    uc->mainloop_callback = new_mainloop_cb;
+}
 // TCG helper
 // 2 arguments are enough for most opcodes. Load/Store needs 3 arguments but we
 // have memory hooks already. We may exceed the maximum arguments of a tcg

@@ -244,6 +244,10 @@ typedef uint32_t (*uc_cb_insn_in_t)(uc_engine *uc, uint32_t port, int size,
 */
 typedef void (*uc_cb_insn_out_t)(uc_engine *uc, uint32_t port, int size,
                                  uint32_t value, void *user_data);
+/*
+ Callback function for the qemu cpu emulation main loop
+*/
+typedef void (*uc_mainloop_cb_t)(uc_engine *uc);
 
 typedef struct uc_tlb_entry uc_tlb_entry;
 // All type of memory accesses for UC_HOOK_MEM_*
@@ -325,7 +329,7 @@ typedef void (*uc_cb_mmio_write_t)(uc_engine *uc, uint64_t offset,
                                    unsigned size, uint64_t value,
                                    void *user_data);
 
-// These are all op codes we support to hook for UC_HOOK_TCG_OP_CODE.
+    // These are all op codes we support to hook for UC_HOOK_TCG_OP_CODE.
 // Be cautious since it may bring much more overhead than UC_HOOK_CODE without
 // proper flags.
 // TODO: Tracing UC_TCG_OP_CALL should be interesting.
@@ -1010,6 +1014,11 @@ uc_err uc_hook_add(uc_engine *uc, uc_hook *hh, int type, void *callback,
 */
 UNICORN_EXPORT
 uc_err uc_hook_del(uc_engine *uc, uc_hook hh);
+
+/*
+  Set the current main loop callback to be called in the qemu cpu main loop
+*/
+UNICORN_EXPORT void uc_set_mainloop_callback(uc_engine *uc, uc_mainloop_cb_t new_mainloop_cb);
 
 typedef enum uc_prot {
     UC_PROT_NONE = 0,

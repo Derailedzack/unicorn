@@ -183,6 +183,7 @@ typedef uc_err (*uc_context_save_t)(struct uc_struct *uc, uc_context *context);
 typedef uc_err (*uc_context_restore_t)(struct uc_struct *uc,
                                        uc_context *context);
 
+
 // hook list offsets
 //
 // The lowest 6 bits are used for hook type index while the others
@@ -310,6 +311,8 @@ struct uc_struct {
     uc_context_save_t context_save;
     uc_context_restore_t context_restore;
 
+    uc_mainloop_cb_t mainloop_callback;
+  
     /*  only 1 cpu in unicorn,
         do not need current_cpu to handle current running cpu. */
     CPUState *cpu;

@@ -213,9 +213,14 @@ void resume_all_vcpus(struct uc_struct* uc)
     /* static void qemu_tcg_cpu_loop(struct uc_struct *uc) */
     cpu->created = true;
     while (true) {
+       
         if (tcg_cpu_exec(uc)) {
             break;
         }
+        if (uc->mainloop_callback != NULL) {
+            uc->mainloop_callback(uc);
+        }
+        
     }
 
     // clear the cache of the exits address, since the generated code
